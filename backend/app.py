@@ -8,15 +8,17 @@ from functions.weather import get_weather
 app = Flask(__name__, static_folder='../react-frontend/build')
 CORS(app)
 
+# Serve static files from the React build directory
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    # If the requested path exists, serve the file, else serve index.html
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
-
+# Handle POST requests to the root URL
 @app.route('/', methods=['POST'])
 def handle_request():
     try:
@@ -24,6 +26,7 @@ def handle_request():
         command = data['command'].lower()
         name = data['name']
 
+        # Handle different command cases
         if command == 'greeting':
             response = {"response": f"hello {name}"}
         elif command == 'what is the meaning of life':
@@ -41,6 +44,8 @@ def handle_request():
         else:
             response = {"response": f"I'm sorry, {name}, I'm afraid I can't do that"}
             return jsonify(response), 403
+        
+        # Return JSON response and 200 status code
         return jsonify(response), 200
 
     except Exception as e:

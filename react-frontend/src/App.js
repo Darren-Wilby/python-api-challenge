@@ -5,35 +5,38 @@ import Textbox from './components/Textbox';
 import './App.css';
 
 function App() {
+  // State variables for name, command, response, and typewriter animation key
   const [name, setName] = useState('');
   const [command, setCommand] = useState('');
   const [response, setResponse] = useState('');
   const [typewriterKey, setTypewriterKey] = useState(0);
 
+  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     setTypewriterKey(prevKey => prevKey + 1);
 
+    // Fetch data from the server using POST request
     fetch("/", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
+      // Send JSON data containing name and command
       body: JSON.stringify({
         name: e.target[0].value,
         command: e.target[1].value
       })
     })
-      .then(response => response.json())
+      .then(response => response.json()) // Parse response as JSON
       .then(data => {
-        console.log(data);
-        setResponse(data.response);
+        console.log(data); // Log the response data
+        setResponse(data.response); // Update the response state variable
       })
       .catch(error => console.error('Error:', error));
   }
 
-
-
+  // JSX structure of the component
   return (
     <div className="App">
       <div className='left'></div>
