@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react'
 
 const SubmitButton = () => (
   <div>
-    <Button size='large' positive>Submit</Button>
+    <Button icon='right arrow' size='large' circular compact positive></Button>
   </div>
 )
 
