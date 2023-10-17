@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-react-app-service
+spec:
+  selector:
+    app: flask-react-app
+  ports:
+    - protocol: TCP
+      port: 80  # Port you want to access the service on
+      targetPort: 5000  # Port your Flask app is listening on in the pod
+  type: LoadBalancer  # Use LoadBalancer type for Docker Desktop
