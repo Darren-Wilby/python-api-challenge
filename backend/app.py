@@ -2,11 +2,15 @@ import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from functions.rockPaperScissors import rock_paper_scissors
-from functions.randomJoke import random_joke
-from functions.weather import get_weather
+from functions.getRandomJoke import get_random_joke
+from functions.getWeather import get_weather
+from functions.getSynonyms import get_synonyms
 
-app = Flask(__name__, static_folder='../react-frontend/build')
+app = Flask(__name__, static_folder='../react-frontend/build',
+            static_url_path='/')
+
 CORS(app)
+
 
 # Serve static files from the React build directory
 @app.route('/', defaults={'path': ''})
@@ -18,6 +22,7 @@ def serve(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
+
 # Handle POST requests to the root URL
 @app.route('/', methods=['POST'])
 def handle_request():
@@ -28,29 +33,30 @@ def handle_request():
 
         # Handle different command cases
         if command == 'greeting':
-            response = {"response": f"hello {name}"}
-        elif command == 'what is the meaning of life':
-            response = {"response": f"the meaning of life is...42"}
+            return {"response": f"hello {name}"}, 200
+        elif command == 'life':
+            return {"response": "...42"}, 200
         elif command in ['rock', 'paper', 'scissors']:
             computer_choice = rock_paper_scissors(command)
-            response = {"response": computer_choice}
-        elif command == 'tell me a joke':
-            joke = random_joke()
-            response = {"response": joke}
-        elif command.startswith('what is the weather like in '):
-            city = command[28:]
+            return {"response": f"{computer_choice}, {name}"}, 200
+        elif command == 'joke':
+            joke = get_random_joke()
+            return {"response": joke}, 200
+        elif command.startswith('weather in '):
+            city = command[11:]
             weather = get_weather(city)
-            response = {"response": weather}
+            return {"response": weather}, 200
+        elif command.startswith('synonyms for '):
+            word = command[13:]
+            synonyms = get_synonyms(word)
+            return {"response": synonyms}, 200
         else:
-            response = {"response": f"I'm sorry, {name}, I'm afraid I can't do that"}
-            return jsonify(response), 403
-        
-        # Return JSON response and 200 status code
-        return jsonify(response), 200
+            return {"response": f"I'm sorry, {name}, I'm afraid I can't do that"}, 403
 
     except Exception as e:
         print(str(e))
         return "Forbidden", 403
+
 
 if __name__ == '__main__':
     app.run(use_reloader=True, port=5000, threaded=True)

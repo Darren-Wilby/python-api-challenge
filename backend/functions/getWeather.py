@@ -4,6 +4,7 @@ import requests
 
 load_dotenv()
 
+
 def get_weather(city):
     """
     Get the weather information for a specific city.
@@ -15,7 +16,7 @@ def get_weather(city):
         str: A string describing the weather conditions and temperature for the specified city.
              Returns an error message if the city is not found or an error occurs during the request.
     """
-    api_key = os.getenv("API_KEY")
+    api_key = os.getenv("WEATHER_API_KEY")
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
     complete_url = f"{base_url}q={city.replace(' ', '')}&appid={api_key}"
 
@@ -28,6 +29,6 @@ def get_weather(city):
         temp_kelvin = main_data["temp"]
         temp_celsius = temp_kelvin - 273.15
 
-        return f"Weather in {city.capitalize()}: {weather_data}, Temperature: {temp_celsius:.1f}°C"
+        return f"Weather in {city.title()}: {weather_data}, Temperature: {temp_celsius:.1f}°C"
     else:
         return "City not found or an error occurred."
