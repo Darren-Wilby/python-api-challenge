@@ -1,0 +1,15 @@
+build
+node_modules
+__pycache__
+myvenv
+*.log
+*.tmp
+*.o
+*.obj
+.git
+.svn
+.hg
+.vscode
+.idea
+*.iml
+vendor
