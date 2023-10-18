@@ -1,3 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-react-app-service
+spec:
+  selector:
+    app: flask-react-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,6 +28,6 @@ spec:
     spec:
       containers:
         - name: flask-react-app
-          image: gcr.io/python-api-challenge-401719/react-flask-app-repo:v1.0
+          image: europe-west2-docker.pkg.dev/GOOGLE_PROJECT/react-flask-app-repo/app:latest
           ports:
             - containerPort: 5000

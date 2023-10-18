@@ -1,0 +1,41 @@
+name: Build and Deploy React Flask App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v2
+
+      - name: Install the gcloud cli
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GOOGLE_PROJECT }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          install_components: "gke-gcloud-auth-plugin"
+          export_default_credentials: true
+
+      - name: Build and push the docker image
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        run: |
+          gcloud auth configure-docker europe-west2-docker.pkg.dev
+          docker build -t europe-west2-docker.pkg.dev/$GOOGLE_PROJECT/react-flask-app-repo/app:latest .
+          docker push europe-west2-docker.pkg.dev/$GOOGLE_PROJECT/react-flask-app-repo/app:latest
+
+      - name: Deploy to GKE
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        run: |
+          gcloud container clusters get-credentials gke-01-prod --region europe-west2 --project $GOOGLE_PROJECT
+          sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" resources.yaml
+          kubectl apply -f resources.yaml
+
+      - name: Remove local docker image
+        run: |
+          docker rmi gcr.io/GOOGLE_PROJECT/react-flask-app-repo/app:latest
