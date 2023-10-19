@@ -31,3 +31,14 @@ spec:
           image: europe-west2-docker.pkg.dev/GOOGLE_PROJECT/react-flask-app-repo/app:latest
           ports:
             - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: api-keys
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-keys
+data:
+  WEATHER_API_KEY: weather-api-key
+  WORDS_API_KEY: words-api-key

@@ -12,7 +12,7 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v2
 
-      - name: Install the gcloud cli
+      - name: Install the gcloud CLI
         uses: google-github-actions/setup-gcloud@v0
         with:
           project_id: ${{ secrets.GOOGLE_PROJECT }}
@@ -31,11 +31,15 @@ jobs:
       - name: Deploy to GKE
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+          WORDS_API_KEY: ${{ secrets.WORDS_API_KEY }}
         run: |
           gcloud container clusters get-credentials gke-01-prod --region europe-west2 --project $GOOGLE_PROJECT
-          sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" resources.yaml
+          sed -i -e "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" -e "s/weather-api-key/$WEATHER_API_KEY/g" -e "s/words-api-key/$WORDS_API_KEY/g" resources.yaml
           kubectl apply -f resources.yaml
 
       - name: Remove local docker image
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run: |
-          docker rmi gcr.io/GOOGLE_PROJECT/react-flask-app-repo/app:latest
+          docker rmi europe-west2-docker.pkg.dev/$GOOGLE_PROJECT/react-flask-app-repo/app:latest

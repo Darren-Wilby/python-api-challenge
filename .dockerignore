@@ -2,6 +2,7 @@ build
 node_modules
 __pycache__
 myvenv
+*.env
 *.log
 *.tmp
 *.o
