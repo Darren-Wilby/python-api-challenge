@@ -1,3 +1,4 @@
+# Module for setting up Google Kubernetes Engine (GKE) cluster authentication
 module "gke_auth" {
   source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   version              = "24.1.0"
@@ -8,6 +9,7 @@ module "gke_auth" {
   depends_on           = [module.gke]
 }
 
+# Resource to write the generated Kubernetes configuration to a local file
 resource "local_file" "kubeconfig" {
   content  = module.gke_auth.kubeconfig_raw
   filename = "kubeconfig-${var.env_name}"

@@ -40,7 +40,7 @@ form {
   padding: 15px;
   color: #ffffff;
   font-family: 'VT323', monospace, sans-serif;
-  font-size: calc(28px);
+  font-size: 28px;
   display: flex;
   align-items: center;
   justify-content: center;

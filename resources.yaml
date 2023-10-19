@@ -17,7 +17,7 @@ kind: Deployment
 metadata:
   name: flask-react-app
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       app: flask-react-app
