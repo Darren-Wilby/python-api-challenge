@@ -48,3 +48,6 @@
 - npm start
 - python app.py
 - terraform graph | dot -Tsvg > graph.svg
+
+# GitHub Actions Tests
+- Test 1
